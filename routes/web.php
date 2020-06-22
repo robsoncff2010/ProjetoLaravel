@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,8 +16,12 @@ use Illuminate\Support\Facades\Route;
 
 //para ver lista de rotas dispinoveis no laravel, usar no teminal = php artisan route:list
 
-route::resource('produtos','ProcuctsController');
+//rota para search
+route::any('produtos/search','ProcuctsController@search')->name('produtos.search'); 
+
+route::resource('produtos','ProcuctsController')->middleware(['auth', 'check.is.admin']);
 //resource resume todas as chamadas de http
+//---> ->Middleware('auth') para autenticar, sem ele, qualquer um acessa sem login
 
 // route::delete('/produtos/{idProduto}','ProductsController@destroy')->name('produtos.destroy');
 // //deletar um novo produto
@@ -43,7 +48,7 @@ route::resource('produtos','ProcuctsController');
 //--------------------------------------------------------------------------
 route::get('/login', function()
 {
-    return redirect('login');
+    return redirect('produtos.index');
 });
 
 
@@ -174,4 +179,4 @@ route::view('view','/welcome');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+
